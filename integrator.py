@@ -3,6 +3,7 @@ import numpy as np
 import scipy.integrate as integrate
 import sys
 import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider
 import sympy as sympy
 
 
@@ -44,6 +45,7 @@ if __name__ == "__main__":
     b = 10
     dotrapz = False
     dogausquad = False
+    doplot = False
     if '-function' in sys.argv:
         p = sys.argv.index('-function')
         func = int(sys.argv[p+1])
@@ -61,8 +63,11 @@ if __name__ == "__main__":
     if '--gausquad' in sys.argv:
             p = sys.argv.index('--gausquad')
             dogausquad = bool(sys.argv[p])
+    if '--plot' in sys.argv:
+            p = sys.argv.index('--plot')
+            doplot = bool(sys.argv[p])
     if '-h' in sys.argv or '--help' in sys.argv:
-            print ("Usage: %s [-function] function [-limit] lowlimit uplimit [-step] number [--trapezodial] [--gausquad] " % sys.argv[0])
+            print ("Usage: %s [-function] function [-limit] lowlimit uplimit [-step] number [--trapezodial] [--gausquad] [--plot] " % sys.argv[0])
             print
             sys.exit(1)
 
@@ -75,3 +80,28 @@ if __name__ == "__main__":
         print ("Analytic Integration: ",analytic)
     else:
         print("no integration rule defined")
+    if doplot:
+        fig = plt.figure(figsize=(8,3))
+
+        x = list(np.arange(1,10,0.05))
+        y = list(map(default_func,x))
+        x_gauss, w_gauss = np.polynomial.laguerre.laggauss(int(step))
+
+        plt.plot(x,y,color='green')
+        second_plot, = plt.plot(x_gauss,w_gauss,color="red")
+        print (second_plot,w_gauss[0])
+        slider_ax = plt.axes([0.1, 0.005, 0.8, 0.05])
+        slide = Slider(slider_ax,      # the axes object containing the slider
+                  'a',            # the name of the slider parameter
+                  1,          # minimal value of the parameter
+                  100,          # maximal value of the parameter
+                  valinit=1  # initial value of the parameter
+                 )
+        def update(a):
+            x_ch , y_ch = np.polynomial.laguerre.laggauss(int(a))
+            second_plot.set_ydata(y_ch)
+            second_plot.set_xdata(x_ch)
+
+            fig.canvas.draw_idle()
+        slide.on_changed(update)
+        plt.show()
