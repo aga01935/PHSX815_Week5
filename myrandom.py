@@ -41,9 +41,9 @@ def sampleourflat():
 		while (curve>0.8 or curve < 0.):
 
 			curve = 0.8-abs(np.log(random.rand()))*0.8
-			print ("this is wrong low",curve)
+			#print ("this is wrong low",curve)
 
-		print ("curve is ",curve)
+		#print ("curve is ",curve)
 			#print ("this should be less than 0.8 and greater than 0..but ", curve)
 
 	elif flat > 2.2:
@@ -51,9 +51,9 @@ def sampleourflat():
 		while (curve>3.14 or curve<2.2):
 
 			curve = 3.14 -abs(np.log(random.rand()))*3.14
-			print ("this is wrong",curve)
+			#print ("this is wrong",curve)
 
-		print ("second curve is  ", curve)
+		#print ("second curve is  ", curve)
 	return curve
 
 
